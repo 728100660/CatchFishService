@@ -2,21 +2,20 @@
 # @Time    : 2024/6/7 15:17
 # @Author  : PXZ
 # @Desc    :
-from Entity.Bullet.Bullet200001 import Bullet200001
+from Entity.Bullet.BaseBullet import CBaseBullet
+
+from Entity.Bullet.CBullet200001 import CBullet200001
 
 oBulletManager = {
-    200001: Bullet200001()
+    200001: CBullet200001()
+}
+
+gFactory = {
+    200001: CBullet200001,
 }
 
 
-class CBaseBullet:
-    iSourceId = 0
-    sName = '基础子弹'
-    iDamageAdd = 1      # 伤害加成
-    iCost = 1          # 消耗金币
-
-    def __init__(self):
-        pass
-
-    def GetCost(self):
-        return self.iCost
+def CreateBullet(iSourceId):
+    CBullet = gFactory.get(iSourceId)
+    oBullet = CBullet()
+    return oBullet

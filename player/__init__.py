@@ -11,12 +11,20 @@ class Cplayer(CSaveObj):
     玩家对象
     """
 
-    def __init__(self):
+    def __init__(self, iPid, sName):
         super(Cplayer, self).__init__()
-        self.iPid = 0  # 玩家id
-        self.iGold = 0  # 金币
-        self.iLevel = 0  # 等级
+        self.iPid = iPid  # 玩家id
+        self.sName = sName  # 名称
+        self.iGold = 10000  # 金币
+        self.iLevel = 1  # 等级
+        self.fRateAdd = 1  # 捕获概率加成
         self.oBag = CBag()
+
+    def GetRateAdd(self):
+        return self.fRateAdd
+
+    def SetRateAdd(self, fRateAdd):
+        self.fRateAdd = fRateAdd
 
     def GetPid(self):
         return self.iPid
@@ -26,6 +34,7 @@ class Cplayer(CSaveObj):
 
     def SetGold(self, iGold):
         self.iGold = iGold
+        print(f"玩家金币 {self.iGold}")
 
     def GetLevel(self):
         return self.iLevel
@@ -47,3 +56,7 @@ class Cplayer(CSaveObj):
             'iLevel': self.iLevel,
             'oBag': self.oBag.save()
         }
+
+def CreatePlayer(iPid, sName):
+    oPlayer = Cplayer(iPid, sName)
+    return oPlayer

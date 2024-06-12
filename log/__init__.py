@@ -21,7 +21,8 @@ class CLog(object):
         if not save_file:
             save_file = get_save_file()
         log_obj = Logger.GetLogger(save_file, group_name)
-        log_obj.info(msg, stacklevel=2)
+        # log_obj.info(msg, stacklevel=2)
+        print(msg)
 
     def error(self, msg, save_file=None, group_name=MYSQL_DB):
         if not save_file:
