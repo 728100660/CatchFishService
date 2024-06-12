@@ -19,7 +19,7 @@ class CBaseRoom:
     同时，为了保证单个玩家的体验，每个玩家有个累积未捕获鱼的消耗金币数目，金币数目越大，捕鱼概率越大
     捕获鱼的收益由房间倍率以及鱼的基础价值控制
     鱼类移动，也可以考虑只让客户端移动，服务端只负责对象的存活时间，及时销毁即可（这样会有无视阻挡直接射击的风险，但是影响不大）
-    问题：成功率过高，没法控制捕鱼概率，生成鱼类方法有问题，没有控制各个种类鱼的数量
+    问题：成功率过高，没法控制捕鱼概率，生成鱼类方法有问题，没有控制各个种类鱼的数量，数学问题
     """
     iMultiplier = 1000  # 倍率
     iMaxGoldPool = 10000 * iMultiplier  # 金币池上限,放水临界点
@@ -37,6 +37,7 @@ class CBaseRoom:
         self.dPlayerUse = {}    # 玩家未捕获鱼所消耗金币数
         self.dPlayerShoot = {}  # 玩家射击出的子弹  # 不存盘，重启即消失
         self.dFish = {}  # {iFishIdx: oFish}
+        self.dFishTypeNum = {}  # {iFishType: iNum}
         self.iFishIdx = 0  # 自增长鱼序号
 
     def VerifyShoot(self, oPlayer: Cplayer):
@@ -122,6 +123,7 @@ class CBaseRoom:
         oPlayer.SetGold(oPlayer.GetGold() + iRewardGold)
         self.iGoldPool -= iRewardGold
         self.dPlayerUse[iPid] = 0   # 清空未捕获鱼所消耗的金币
+        self.dFishTypeNum[oFish.iSourceId] -= 1
         LOGGER.info(f"player catch res: {oPlayer.GetPid()} {oPlayer.GetGold()}")
         return iRewardGold
 
@@ -140,10 +142,20 @@ class CBaseRoom:
     def GeneralFish(self):  # 生成鱼类
         x = random.randint(0, self.iLength)
         y = random.randint(0, self.iWidth)
-        iFish = random.choice(self.lFish)
+        # 种类数目限制
+        lTmpFish = self.lFish.copy()
+        iFish = random.choice(lTmpFish)
+        while iFish == 400003 and self.dFishTypeNum.get(iFish, 0) >= 3:     # 蝙蝠鱼数量不能超过3
+            lTmpFish.remove(iFish)
+            iFish = random.choice(lTmpFish)
+        while iFish == 400004 and self.dFishTypeNum.get(iFish, 0) >= 1:     # 锤头鲨数量不能超过1
+            lTmpFish.remove(iFish)
+            iFish = random.choice(lTmpFish)
+
         oFish = CreateFish(iFish, x, y)
         self.iFishIdx += 1
         self.dFish[self.iFishIdx] = oFish
+        self.dFishTypeNum[iFish] = self.dFishTypeNum.get(iFish, 0) + 1
         print(f"生成鱼类 {self.iFishIdx} {iFish} {x} {y}")
 
     def load(self, data):

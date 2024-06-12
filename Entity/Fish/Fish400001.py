@@ -10,5 +10,5 @@ class CFish400001(CBaseFish):
     sName = '小黄鱼'  # 名称
     iMaxBlood = 20  # 血量上限
     iLevel = 1  # 等级
-    fBaseRate = 20  # 基础捕获概率范围  0-100
-    iGold = 10  # 鱼金币价值 iMaxBlood / 2
+    fBaseRate = 40  # 基础捕获概率范围  0-100
+    iGold = 1  # 鱼金币价值 iMaxBlood / 2

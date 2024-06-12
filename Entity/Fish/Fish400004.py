@@ -11,5 +11,5 @@ class CFish400004(CBaseFish):
     sName = '锤头鲨'  # 名称
     iMaxBlood = 400  # 血量上限
     iLevel = 1  # 等级
-    fBaseRate = 1  # 基础捕获概率范围  0-100
-    iGold = 200  # 鱼金币价值 iMaxBlood / 2
+    fBaseRate = 5  # 基础捕获概率范围  0-100
+    iGold = 25  # 鱼金币价值 iMaxBlood / 2
